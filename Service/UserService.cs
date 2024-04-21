@@ -1,4 +1,5 @@
-﻿using EducationalPortal.Models;
+﻿using EducationalPortal.Helper;
+using EducationalPortal.Models;
 using EducationalPortal.Repository.Interface;
 using EducationalPortal.Service.Interface;
 using NuGet.Protocol.Plugins;
@@ -11,10 +12,12 @@ namespace EducationalPortal.Service
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<ServiceResponse> Add(User user)
@@ -44,9 +47,9 @@ namespace EducationalPortal.Service
             return new ServiceResponse() { Status = response.Status, Data = response.Data };
         }
 
-        public Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return _userRepository.GetAll();
+            return await _userRepository.GetAll();
         }
 
         public async Task<User> GetById(string id)
@@ -57,6 +60,11 @@ namespace EducationalPortal.Service
         public async Task<ServiceResponse> Login(LoginModel login)
         {
             var response = await _userRepository.Login(login);
+
+            if (response.Status)
+            {
+                return new ServiceResponse() { Status = true, Data = new { token = JWT.GenerateToken(_configuration["Jwt:Key"], _configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], response.Data.UserName), user = response.Data } };
+            }
             return new ServiceResponse() { Status = response.Status, Data = response.Data };
         }
 

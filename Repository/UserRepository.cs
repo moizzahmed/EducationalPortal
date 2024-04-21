@@ -51,7 +51,8 @@ namespace EducationalPortal.Repository
         }
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            var users = await _context.Users.ToListAsync();
+            return users;
         }
         public async Task<User> GetById(string id)
         {
@@ -90,7 +91,6 @@ namespace EducationalPortal.Repository
         public async Task<RepositoryResponse> Update(User user)
         {
             var dbUser = await _context.Users
-                                       .AsNoTracking()
                                        .FirstOrDefaultAsync(u => u.Id == user.Id);
 
             if (dbUser == null)
@@ -102,8 +102,11 @@ namespace EducationalPortal.Repository
                 };
             }
 
-            dbUser = await _context.Users.FindAsync(user.Id);
-            _context.Users.Update(dbUser);
+            dbUser.FirstName = user.FirstName;
+            dbUser.LastName = user.LastName;
+            dbUser.Email = user.Email;
+            dbUser.UserName = user.UserName;
+
             await _context.SaveChangesAsync();
 
             return new RepositoryResponse

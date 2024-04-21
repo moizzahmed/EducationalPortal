@@ -1,0 +1,33 @@
+﻿@model EducationalPortal.Models.User
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h2>User Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2"><strong>First Name:</strong></div>
+            <div class="col-md-10">@Model.FirstName</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"><strong>Last Name:</strong></div>
+            <div class="col-md-10">@Model.LastName</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"><strong>Email:</strong></div>
+            <div class="col-md-10">@Model.Email</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"><strong>Username:</strong></div>
+            <div class="col-md-10">@Model.username</div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="@Url.Action("Index")" class="btn btn-primary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

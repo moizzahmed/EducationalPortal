@@ -1,5 +1,6 @@
 ﻿using EducationalPortal.Models;
 using EducationalPortal.Service.Interface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationalPortal.Controllers
@@ -63,12 +64,11 @@ namespace EducationalPortal.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, User user)
         {
             try
             {
-                var User = new User();
-                var response = await _userService.Update(User);
+                var response = await _userService.Update(user);
                 if (response.Status)
                 {
                     return RedirectToAction(nameof(Index));
